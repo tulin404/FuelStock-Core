@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model imports {
+  id                  String                @id @default(uuid()) @db.Uuid
+  tenant_id           String                @db.Uuid
+  date                String                
+  status              StatusTypes           @default(PENDING)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+
+  tenants             tenants               @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  product_daily_sales product_daily_sales[]
+  processed_snapshots processed_snapshots[]
+  stock_movements stock_movements[]
+
+  @@unique([tenant_id, date])
+}
+
+enum StatusTypes {
+  PENDING
+  PROCESSED
+  CANCELED
+}
+
+model processed_snapshots {
+  tenant_id               String    @db.Uuid
+  product_id              String    @db.Uuid
+  import_id               String    @db.Uuid
+  last_date               String
+  last_cumulative_qty     Int
+  last_cumulative_revenue Decimal  @db.Decimal(10, 2)
+  last_cumulative_cost    Decimal  @db.Decimal(10, 2)
+  last_cumulative_profit  Decimal  @db.Decimal(10, 2)
+  updated_at              DateTime @default(now()) @db.Timestamp(6)
+
+  imports                 imports   @relation(fields: [import_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  products                products  @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tenants                 tenants   @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([tenant_id, product_id])
+}
+
+model product_daily_sales {
+  id                 String   @id @default(uuid()) @db.Uuid
+  tenant_id          String   @db.Uuid
+  product_id         String   @db.Uuid
+  import_id          String   @db.Uuid
+  date               String
+  cumulative_qty     Int
+  cumulative_revenue Decimal  @db.Decimal(10, 2)
+  cumulative_cost    Decimal  @db.Decimal(10, 2)
+  cumulative_profit  Decimal  @db.Decimal(10, 2)
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+
+  imports            imports  @relation(fields: [import_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  products           products @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tenants            tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([tenant_id, product_id, date])
+  @@index([tenant_id, product_id, date])
+}
+
+model product_monthly_sales {
+  id             String   @id @default(uuid()) @db.Uuid
+  tenant_id      String   @db.Uuid
+  product_id     String   @db.Uuid
+  year           Int
+  month          Int
+  total_sold_qty Decimal  @default(0) @db.Decimal(14, 3)
+  total_revenue  Decimal  @default(0) @db.Decimal(14, 2)
+  total_cost     Decimal  @default(0) @db.Decimal(14, 2)
+  total_profit   Decimal  @default(0) @db.Decimal(14, 2)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  
+  products       products @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pms_product")
+  tenants        tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pms_tenant")
+
+  @@unique([tenant_id, product_id, year, month], map: "uq_pms_unique")
+}
+
+model products {
+  id                    String                  @id @default(uuid()) @db.Uuid
+  tenant_id             String                  @db.Uuid
+  name                  String
+  category              String?
+  active                Boolean                 @default(true)
+  created_at            DateTime                @default(now()) @db.Timestamp(6)
+
+  processed_snapshots   processed_snapshots[]
+  product_daily_sales   product_daily_sales[]
+  product_monthly_sales product_monthly_sales[]
+  tenants               tenants                 @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  stock_movements       stock_movements[]
+  stocks                stocks[]
+
+  @@unique([tenant_id, name])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model stock_movements {
+  id             String   @id @default(uuid()) @db.Uuid
+  import_id      String?  @db.Uuid
+  tenant_id      String   @db.Uuid
+  product_id     String   @db.Uuid
+  type           StockMovementType
+  quantity       Decimal  @db.Decimal(14,3)
+  unit_cost      Decimal  @db.Decimal(10, 2)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+
+  imports        imports? @relation(fields: [import_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  products       products @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tenants        tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+enum StockMovementType {
+  SALE
+  PURCHASE
+  ADJUSTMENT
+}
+
+model stocks {
+  product_id    String   @db.Uuid
+  tenant_id     String   @db.Uuid
+  current_stock Decimal  @default(0) @db.Decimal(14, 3)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  products      products @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_stocks_product")
+  tenants       tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_stocks_tenant")
+  
+  @@id([product_id, tenant_id])
+}
+
+model tenants {
+  id                    String                  @id @default(uuid()) @db.Uuid
+  name                  String
+  document              String?
+  active                Boolean                @default(true)
+  created_at            DateTime               @default(now()) @db.Timestamptz(6)
+
+  imports               imports[]
+  processed_snapshots   processed_snapshots[]
+  product_daily_sales   product_daily_sales[]
+  product_monthly_sales product_monthly_sales[]
+  products              products[]
+  stock_movements       stock_movements[]
+  stocks                stocks[]
+}

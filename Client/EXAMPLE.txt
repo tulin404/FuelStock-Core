@@ -1,0 +1,1 @@
+Esta pasta é a parte criada e configura no client-side para permitir o envio automático de planilhas pelo PowerShell por meio de requisições HTTP.
