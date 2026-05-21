@@ -11,6 +11,7 @@ Além do gerenciamento de estoque, o sistema fornece métricas estratégicas sob
   <p>
     Este repositório contém apenas o <strong>Core</strong> do sistema FuelStock, ou seja, uma parte da arquitetura e das funcionalidades da plataforma, não representando o projeto completo em sua totalidade.
   </p>
+  <p>A documentação oficial e completa do sistema será disponibilizada futuramente, após a finalização do produto.</p>
   <p>
     Além disso, o projeto é distribuído sob a licença <strong>BSL 1.1 (Business Source License)</strong>.
   </p>
@@ -34,4 +35,11 @@ Além do controle operacional, o sistema transforma dados em inteligência estra
 </p>
 <p>
 Mais do que apenas um sistema de estoque, o FuelStock atua como uma ferramenta estratégica para crescimento, oferecendo aos donos e gerentes maior controle, previsibilidade e segurança sobre o funcionamento da loja.
+</p>
+
+<h1>📄 Licensa</h1>
+<p>
+Este projeto está licenciado sob a <strong>BSL 1.1 (Business Source License)</strong>.
+
+Consulte o arquivo `LICENSE` para mais detalhes.
 </p>
