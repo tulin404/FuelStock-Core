@@ -1,4 +1,6 @@
-<h1>⛽ FuelStock-Core</h1>
+<h1 align="center">
+  <img height="328px" src="./FuelStock-Transparent.png" />
+</h1>
 
 <p>
 O <strong>FuelStock</strong> é um SaaS B2B desenvolvido para transformar o gerenciamento de estoque em lojas de conveniência de postos de gasolina. Enquanto muitos sistemas legados utilizados por postos focam apenas na operação das bombas e não oferecem integração eficiente com o estoque das lojas, o FuelStock centraliza e automatiza esse controle em uma única plataforma.
