@@ -59,7 +59,7 @@ Mais do que um sistema de estoque, o FuelStock atua como uma ferramenta estraté
 
 ---
 
-## 🏗 Arquitetura
+## 🏗️ Arquitetura
 
 Este repositório contém apenas o **Core** da plataforma.
 
@@ -77,7 +77,7 @@ Alguns componentes proprietários e serviços internos não fazem parte deste re
 
 ---
 
-## 🛠 Stack
+## 🛠️ Stack
 
 ### Backend
 - Node.js
