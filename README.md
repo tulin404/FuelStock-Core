@@ -125,23 +125,29 @@ git clone https://github.com/seu-usuario/FuelStock.git
 cd FuelStock
 ```
 
-Instale as dependências:
+Configure as variáveis de ambiente:
 
 ```bash
-pnpm install
+cd Server/backend && touch .env.dev
 ```
 
-Execute a aplicação:
+Suba os containers:
 
 ```bash
-pnpm dev
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-Ou utilizando Docker:
+Aplique as migrations:
 
 ```bash
-docker compose up -d
+pnpm prisma migrate dev
 ```
+
+> **Produção**
+>
+> O ambiente de produção é provisionado e atualizado automaticamente pelo pipeline de CI/CD, incluindo a execução das migrations e o gerenciamento dos containers.
+
+---
 
 ## 📚 Documentação
 
@@ -163,7 +169,7 @@ Ela incluirá:
 
 Este repositório **não representa a plataforma completa**.
 
-Algumas funcionalidades, serviços internos, integrações e componentes proprietários foram removidos ou não são distribuídos publicamente.
+Alguns serviços internos, integrações e componentes proprietários foram removidos ou não são distribuídos publicamente.
 
 O objetivo deste repositório é demonstrar a arquitetura, a qualidade do código e parte das funcionalidades desenvolvidas para o FuelStock.
 
