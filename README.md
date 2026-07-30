@@ -24,6 +24,30 @@ Além do gerenciamento de estoque, o sistema fornece métricas estratégicas sob
 
 ---
 
+## 📸 Screenshots
+
+### Dashboard
+
+<p align="center">
+  <img src="./docs/Analytics.png" width=900 />  
+</p>
+
+### Gestão de estoque
+
+<p align="center">
+  <img src="./docs/MainPanel.png" width=900 />  
+  <img src="./docs/Edit.png" width=900 />
+</p>
+
+### Inteligência Artificial
+
+<p align="center">
+  <img src="./docs/AI.png" width=900 />  
+  <img src="./docs/AIAnalysis.png" width=900 />  
+</p>
+
+---
+
 ## ✨ Principais Recursos
 
 * 📦 Gerenciamento inteligente de estoque
