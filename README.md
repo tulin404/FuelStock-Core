@@ -80,6 +80,7 @@ Além do gerenciamento de estoque, o sistema fornece métricas estratégicas sob
 * 🤖 Insights gerados por Inteligência Artificial
 * 📊 Controle de vendas, compras e lucratividade
 * 🏪 Arquitetura Multi-Tenant
+* 📱 Interface totalmente responsiva
 * 🔐 Autenticação segura com JWT + Refresh Tokens
 * 📁 Importação automatizada de relatórios
 * 📦 Histórico completo de movimentações
