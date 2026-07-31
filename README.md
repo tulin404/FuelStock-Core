@@ -177,7 +177,7 @@ Alguns componentes proprietários e serviços internos não fazem parte deste re
 Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/FuelStock.git
+git clone https://github.com/tulin404/FuelStock.git
 
 cd FuelStock
 ```
