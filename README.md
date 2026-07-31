@@ -1,8 +1,31 @@
 # FuelStock
 
 <p align="center">
-  <img height="328px" src="./FuelStock-Transparent.png" />
+  <img height="328px" src="./FuelStock-Transparent.webp" />
 </p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/License-BSL%201.1-blue?style=for-the-badge" alt="License">
+
+  <img src="https://img.shields.io/badge/Node.js-24.x-339933?logo=node.js&logoColor=white&style=for-the-badge" alt="Node.js">
+
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white&style=for-the-badge" alt="TypeScript">
+
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black&style=for-the-badge" alt="React">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white&style=for-the-badge" alt="PostgreSQL">
+
+  <img src="https://img.shields.io/badge/Redis-8-DC382D?logo=redis&logoColor=white&style=for-the-badge" alt="Redis">
+
+  <img src="https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white&style=for-the-badge" alt="Docker">
+
+  <img src="https://img.shields.io/badge/BullMQ-Workers-orange?style=for-the-badge" alt="BullMQ">
+
+  <img src="https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma&logoColor=white&style=for-the-badge" alt="Prisma">
+</p>
+
 
 <p align="center">
   <strong>Plataforma SaaS para gerenciamento inteligente de estoque de lojas de conveniência de postos de combustível.</strong>
