@@ -5,6 +5,8 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Version-Beta-FF9800?style=for-the-badge" alt="Version">
+  
   <img src="https://img.shields.io/badge/License-BSL%201.1-blue?style=for-the-badge" alt="License">
 
   <img src="https://img.shields.io/badge/Node.js-24.x-339933?logo=node.js&logoColor=white&style=for-the-badge" alt="Node.js">
@@ -52,21 +54,21 @@ Além do gerenciamento de estoque, o sistema fornece métricas estratégicas sob
 ### Dashboard
 
 <p align="center">
-  <img src="./docs/Analytics.png" width=900 />  
+  <img src="./docs/Analytics.png" width=900>  
 </p>
 
 ### Gestão de estoque
 
 <p align="center">
-  <img src="./docs/MainPanel.png" width=900 />  
-  <img src="./docs/Edit.png" width=900 />
+  <img src="./docs/MainPanel.png" width=900>  
+  <img src="./docs/Edit.png" width=900>
 </p>
 
 ### Inteligência Artificial
 
 <p align="center">
-  <img src="./docs/AI.png" width=900 />  
-  <img src="./docs/AIAnalysis.png" width=900 />  
+  <img src="./docs/AI.png" width=900>  
+  <img src="./docs/AIAnalysis.png" width=900>  
 </p>
 
 ---
