@@ -53,3 +53,29 @@ export const stockQueue = new Queue(QUEUE.STOCK, {
         removeOnFail: 1000
     }
 });
+
+export const analyticsQueue = new Queue(QUEUE.ANALYTICS, {
+    connection: queueConnection,
+    defaultJobOptions: {
+        attempts: 3,
+        backoff: {
+            type: "exponential",
+            delay: 5000
+        },
+        removeOnComplete: true,
+        removeOnFail: 1000
+    }
+});
+
+export const monthlyQueue = new Queue(QUEUE.MONTHLY, {
+    connection: queueConnection,
+    defaultJobOptions: {
+        attempts: 3,
+        backoff: {
+            type: "exponential",
+            delay: 5000
+        },
+        removeOnComplete: true,
+        removeOnFail: 1000
+    }
+});

@@ -1,6 +1,7 @@
 import type { PrismaClient } from "../generated/prisma/client.js";
+import { formatter } from "../utils/date.formatter.js";
 
-export default class ImportService {
+export class ImportService {
     readonly #prisma: PrismaClient;
 
     constructor(prisma: PrismaClient) {
@@ -9,12 +10,7 @@ export default class ImportService {
 
     #postImport(import_id: string, tenant_id: string) {
         // EN-CA format for DB
-        const todayBR = new Intl.DateTimeFormat("en-CA", {
-            timeZone: "America/Sao_Paulo",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        }).format(new Date());
+        const todayBR = formatter.format(new Date());
 
         return this.#prisma.imports.create({
             data: {
@@ -38,7 +34,7 @@ export default class ImportService {
                 data: { status }
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
             throw error;
         };
     };

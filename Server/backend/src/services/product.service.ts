@@ -1,13 +1,11 @@
-import type { PrismaClient, Prisma } from "../generated/prisma/client.js";
+import type { PrismaClient } from "../generated/prisma/client.js";
 import type { MappedDailyProduct } from "../types/types.js";
 
-export default class ProductService {
+export class ProductService {
     readonly #prisma: PrismaClient;
-    readonly #prismaStatic: typeof Prisma;
     
-    constructor(prisma: PrismaClient, prismaStatic: typeof Prisma) {
+    constructor(prisma: PrismaClient) {
         this.#prisma = prisma;
-        this.#prismaStatic = prismaStatic;
     };
 
     async upsertProducts(tenant_id: string, productData: MappedDailyProduct[]) {
@@ -21,23 +19,15 @@ export default class ProductService {
         if (uniqueNames.size === 0) return;
 
         // BATCH INSERT
-        const values = Array.from(uniqueNames).map(name =>
-            this.#prismaStatic.sql`(
-                ${crypto.randomUUID()}::uuid,
-                ${tenant_id}::uuid,
-                ${name.trim()}
-            )`
-        );
+        const products = Array.from(uniqueNames).map(name => ({
+            id: crypto.randomUUID(),
+            tenant_id,
+            name: name.trim()
+        }));
 
-        await this.#prisma.$executeRaw`
-            INSERT INTO products (
-                id,
-                tenant_id,
-                name
-            )
-            VALUES ${this.#prismaStatic.join(values)}
-            ON CONFLICT (tenant_id, name)
-            DO NOTHING
-        `;
+        await this.#prisma.products.createMany({
+            data: products,
+            skipDuplicates: true
+        });
     };
 };

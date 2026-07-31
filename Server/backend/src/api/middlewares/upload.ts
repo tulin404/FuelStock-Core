@@ -5,11 +5,7 @@ import type { Request } from "express";
 const storage = multer.memoryStorage();
 
 // SECURITY
-function fileFilter(
-    req: Request,
-    file: Express.Multer.File,
-    callback: multer.FileFilterCallback    
-) {
+function fileFilter(req: Request, file: Express.Multer.File, callback: multer.FileFilterCallback) {
     const isExcel = file.mimetype === "text/vnd.ms-excelv" || file.originalname.endsWith(".xls");
 
     if (!isExcel) {
@@ -18,7 +14,6 @@ function fileFilter(
 
     // ACCEPT FILE
     callback(null, true)
-
 };
 
 export const upload = multer({

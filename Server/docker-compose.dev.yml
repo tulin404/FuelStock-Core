@@ -1,0 +1,109 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: fuelstock-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: fuelstock-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  x-backend-base: &backend-base
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./backend/.env.dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - uploads:/app/uploads
+    depends_on:
+      - db
+      - redis-auth
+      - redis-queue
+    restart: unless-stopped
+
+  backend:
+    <<: *backend-base
+    container_name: fuelstock-backend
+
+  worker-import:
+    <<: *backend-base
+    container_name: fuelstock-worker-import
+    command: pnpm run worker:import:dev
+
+  worker-product:
+    <<: *backend-base
+    container_name: fuelstock-worker-product
+    command: pnpm run worker:product:dev
+
+  worker-snapshot:
+    <<: *backend-base
+    container_name: fuelstock-worker-snapshot
+    command: pnpm run worker:snapshot:dev
+
+  worker-stock:
+    <<: *backend-base
+    container_name: fuelstock-worker-stock
+    command: pnpm run worker:stock:dev
+
+  worker-analytics:
+    <<: *backend-base
+    container_name: fuelstock-worker-analytics
+    command: pnpm run worker:analytics:dev
+
+  worker-monthly:
+    <<: *backend-base
+    container_name: fuelstock-worker-monthly
+    command: pnpm run worker:monthly:dev
+
+  db:
+    image: postgres:17
+    container_name: fuelstock-db
+    environment:
+      POSTGRES_DB: fuelstock
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis-auth:
+    image: redis:7
+    container_name: redis-auth
+    command: redis-server --requirepass redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  redis-queue:
+    image: redis:7
+    container_name: redis-queue
+    command: redis-server --requirepass redis --appendonly yes
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-queue-data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-queue-data:
+  uploads:

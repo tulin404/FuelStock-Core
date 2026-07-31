@@ -5,7 +5,7 @@ export function normalizeDailyRow(row: string[]): MappedDailyProduct {
         productName: row[0]?.trim() ?? "Produto sem nome",
         unitRevenue: Number(row[1]?.trim().replace(",", ".")),
         unitCost: Number(row[2]?.trim().replace(",", ".")),
-        unitProfitMargin: Number(row[3]?.trim().replace(",", ".")),
+        unitProfitMargin: Number(row[4]?.trim().replace(",", ".").replace("%", "")),
 
         totalSoldQty: Number(row[5]?.slice(0, 4).trim().replace(".", "").replace(",", ".")),
 
@@ -16,6 +16,7 @@ export function normalizeDailyRow(row: string[]): MappedDailyProduct {
 };
 
 export function normalizeStockRow(row: RawStockProduct): MappedStockProduct {
+
     return {
         name: row.Produto,
         quantity: Number(row.Quantidade),

@@ -5,34 +5,56 @@
   "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsx --inspect server.ts",
-    "worker:import": "tsx src/workers/import.worker.ts",
-    "worker:product": "tsx src/workers/product.worker.ts",
-    "worker:snapshot": "tsx src/workers/snapshot.worker.ts",
-    "worker:stock": "tsx src/workers/stock.worker.ts"
+
+    "dev": "pnpm tsx watch --ignore src/generated server.ts",
+    "dev:workers": "pnpm run \"/^worker:.*/\"",
+
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "workers": "pnpm run \"/^worker:.*/\"",
+
+    "worker:import:dev": "pnpm tsx watch --ignore src/generated src/workers/import.worker.ts",
+    "worker:product:dev": "pnpm tsx watch --ignore src/generated src/workers/product.worker.ts",
+    "worker:snapshot:dev": "pnpm tsx watch --ignore src/generated src/workers/snapshot.worker.ts",
+    "worker:stock:dev": "pnpm tsx watch --ignore src/generated src/workers/stock.worker.ts",
+    "worker:analytics:dev": "pnpm tsx watch --ignore src/generated src/workers/analytics.worker.ts",
+    "worker:monthly:dev": "pnpm tsx watch --ignore src/generated src/workers/monthly.worker.ts",
+
+    "worker:import": "node dist/src/workers/import.worker.js",
+    "worker:product": "node dist/src/workers/product.worker.js",
+    "worker:snapshot": "node dist/src/workers/snapshot.worker.js",
+    "worker:stock": "node dist/src/workers/stock.worker.js",
+    "worker:analytics": "node dist/src/workers/analytics.worker.js",
+    "worker:monthly": "node dist/src/workers/monthly.worker.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.19.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
-    "prisma": "^6.19.3",
     "nodemon": "^3.1.14",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@types/cors": "^2.8.19",
+    "argon2": "^0.44.0",
     "bullmq": "^5.76.7",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
     "ioredis": "^5.10.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
+    "prisma": "^6.19.3",
     "ts-node": "^10.9.2",
     "xlsx": "^0.18.5",
     "zod": "^4.4.3"

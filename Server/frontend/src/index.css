@@ -1,111 +1,110 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@theme {
+    /* Breakpoints */
+    --breakpoint-2.5xl: 1664px;
+    --breakpoint-3xl: 1920px;
+    --breakpoint-xs: 384px;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Text Sizes */
+    --text-2.5xl: 26px;
+    --text-4.5xl: 40px;
+    
+    /* Brand */
+    --color-primary: #f48004;
+    --color-primary-hover: #e17100;
+    --color-primary-active: #c96300;
+    --color-primary-foreground: #ffffff;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+    /* Layout */
+    --color-background: #f5f5f5;
+    --color-surface: #ffffff;
+    --color-surface-hover: #fafafa;
+
+    /* Typography */
+    --color-text: #2a2a2a;
+    --color-text-muted: #737373;
+    --color-text-disabled: #a3a3a3;
+
+    /* Borders */
+    --color-border: #e5e5e5;
+    --color-border-hover: #d4d4d4;
+    --color-border-focus: #f48004;
+
+    /* Success */
+    --color-success: #16a34a;
+    --color-success-surface: #f0fdf4;
+    --color-success-border: #86efac;
+
+    /* Warning */
+    --color-warning: #f59e0b;
+    --color-warning-surface: #fffbeb;
+    --color-warning-border: #fcd34d;
+
+    /* Danger */
+    --color-danger: #dc2626;
+    --color-danger-surface: #fef2f2;
+    --color-danger-surface-hover: #fee2e2;
+    --color-danger-surface-active: #fca5a5;
+    --color-danger-border: #fca5a5;
+
+    /* Inputs */
+    --color-input-background: #ffffff;
+    --color-input-border: #e5e5e5;
+    --color-input-border-focus: #f48004;
+    --color-input-placeholder: #a3a3a3;
+
+    /* Buttons */
+    --color-button: #f48004;
+    --color-button-hover: #e17100;
+    --color-button-active: #c96300;
+    --color-button-text: #ffffff;
+
+    /* Fonts */
+    --font-main: "Outfit", sans-serif;
+    --font-secondary: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+#login input:invalid:not(:placeholder-shown) {
+    border: 2px solid var(--color-danger-border);
+    background-color: var(--color-danger-surface);
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+input {
+    outline: none;
 }
 
-body {
-  margin: 0;
+button:hover {
+    cursor: pointer;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.spinner-dot {
+    border-radius: 100%;
+    background-color: var(--color-primary);
+    height: 20px;
+    width: 20px;
+    animation: loading 1.5s ease-in-out infinite;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+#dot-1 {
+    animation-delay: 0s;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+#dot-2 {
+    animation-delay: 0.15s;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+#dot-3 {
+    animation-delay: 0.3s;
+}
+
+@keyframes loading {
+    0%, 100% {
+        transform: translateY(0px);
+        opacity: 0.6;
+    } 50% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
 }

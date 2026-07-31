@@ -2,12 +2,11 @@ import { Worker } from "bullmq";
 import { QUEUE } from "../queues/queueTypes.js";
 import { JOBS } from "../jobs/jobTypes.js";
 import { queueConnection } from "../redis/queue-connection.js";
-import ImportService from "../services/import.service.js";
-import QueueService from "../services/queue.service.js";
+import { ImportService } from "../services/import.service.js";
+import { QueueService } from "../services/queue.service.js";
 import { client } from "../db/prisma.js";
 
 const service = new ImportService(client);
-const queueService = new QueueService();
 
 export const importWorker = new Worker(
     QUEUE.IMPORT,
@@ -28,7 +27,7 @@ export const importWorker = new Worker(
                 }
 
                 // ADD ANOTHER QUEUE
-                await queueService.addProductJob(import_id, tenant_id, filePath);
+                await QueueService.addProductJob(import_id, tenant_id, filePath);
 
                 break;
         };

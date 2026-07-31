@@ -1,16 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
-import JwtHandler from "../auth/jwt.js";
-import { isAccessTokenPayload } from "../auth/guard.js";
-import { authConnection } from "../../redis/auth-connection.js";
-
-const handler = new JwtHandler(authConnection);
-const JWT_SECRET = process.env.JWT_SECRET!;
+import { JwtService } from "../services/jwt.service.js";
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-        return res.status(401).json({ error: "No Token" });
+        return res.status(401).json({ error: "No auth header" });
     };
 
     const [, token] = authHeader.split(" ");
@@ -20,19 +15,17 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     };
 
     try {
-        const decoded = handler.verifyJwt(token, JWT_SECRET);
+        const decoded = JwtService.verifyAccess(token);
 
-        if (!isAccessTokenPayload(decoded)) {
-            throw new Error("Token incompleto ou inválido");
-        };
-
-        if (!decoded.sub || !decoded.tenant_id) {
-            return res.status(401).json({ error: "Token incompleto ou inválido" });
+        if (!JwtService.isAccessTokenPayload(decoded)) {
+            return res.status(401).json({ error: "Token incompleto ou inválido" }); // LESS INFO THE BETTER
         };
 
         req.user = {
+            sid: decoded.sid,
             id: decoded.sub,
             tenant_id: decoded.tenant_id,
+            role: decoded.role
         };
 
         return next();

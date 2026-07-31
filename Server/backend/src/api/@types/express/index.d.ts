@@ -1,10 +1,17 @@
-import "express";
+import { Request } from "express";
+import type { Roles } from "../../../generated/prisma/enums.ts";
 
-declare module "express-serve-static-core" {
-    interface Request {
-        user?: {
-            id: string;
-            tenant_id: string;
-        };
-    };
-};
+declare global {
+    namespace Express {
+        interface Request {
+            user: {
+                sid: string,
+                id: string;
+                tenant_id: string;
+                role: Roles
+            };
+        }
+    }
+}
+
+export {};

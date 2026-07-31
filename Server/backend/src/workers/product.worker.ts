@@ -2,15 +2,13 @@ import { Worker } from "bullmq";
 import { QUEUE } from "../queues/queueTypes.js";
 import { JOBS } from "../jobs/jobTypes.js";
 import { queueConnection } from "../redis/queue-connection.js";
-import ProductService from "../services/product.service.js";
-import QueueService from "../services/queue.service.js";
+import { ProductService } from "../services/product.service.js";
+import { QueueService } from "../services/queue.service.js";
 import { client } from "../db/prisma.js";
-import { Prisma } from "../generated/prisma/client.js";
 import { parseDailyXls } from "../utils/xls.parser.js";
 import fs from "fs";
 
-const service = new ProductService(client, Prisma);
-const queueService = new QueueService();
+const service = new ProductService(client);
 
 export const productWorker = new Worker(
     QUEUE.PRODUCT,
@@ -35,7 +33,7 @@ export const productWorker = new Worker(
                 };
 
                 // ADD ANOTHER QUEUE
-                queueService.addSnapshotJob(import_id, tenant_id, filePath);
+                await QueueService.addSnapshotJob(import_id, tenant_id, filePath);
 
                 break;
         };

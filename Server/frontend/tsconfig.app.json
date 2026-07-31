@@ -6,6 +6,15 @@
     "module": "esnext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+    "strictNullChecks": false,
+    "useUnknownInCatchVariables": false,
+
+    /* Aliases */
+    "paths": {
+        "@/*": ["./src/*"],
+        "@dashboard/*": ["./src/pages/Dashboard/*"],
+        "@login/*": ["./src/pages/Login/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

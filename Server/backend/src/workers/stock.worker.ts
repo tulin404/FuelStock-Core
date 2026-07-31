@@ -2,13 +2,11 @@ import { Worker } from "bullmq";
 import { QUEUE } from "../queues/queueTypes.js";
 import { JOBS } from "../jobs/jobTypes.js";
 import { queueConnection } from "../redis/queue-connection.js";
-import QueueService from "../services/queue.service.js";
-import StockService from "../services/stock.service.js";
+import { StockService } from "../services/stock.service.js";
 import { client } from "../db/prisma.js";
 import { Prisma } from "../generated/prisma/client.js";
 
 const service = new StockService(client, Prisma);
-const queueService = new QueueService();
 
 export const stockWorker = new Worker(
     QUEUE.STOCK,

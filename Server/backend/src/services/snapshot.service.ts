@@ -1,8 +1,14 @@
 import type { Prisma, PrismaClient } from "../generated/prisma/client.js";
+import type { product_daily_salesCreateManyInput } from "../generated/prisma/models.js";
 import type { MappedDailyProduct } from "../types/types.js";
+import { formatter } from "../utils/date.formatter.js";
 import normalizeProduct from "../utils/normalizeProduct.js";
 
-export default class SnapshotService {
+// NOTE!
+// CASTING AND SQL ARE BEING DONE INSIDE THE RAW QUERIES FOR MEMORY REASONS
+// AND ARRAYS ARE BEING USE INSTEAD OF OBJECTS FOR PERFORMANCE
+
+export class SnapshotService {
     readonly #prisma: PrismaClient;
     readonly #prismaStatic: typeof Prisma;
     
@@ -38,14 +44,9 @@ export default class SnapshotService {
         // DOING BOTH SNAPSHOT AND DAILY TO SAVE PROCESSING POWER AND DB WRITES/READS
         
         const productsMap = await this.#createProductsMap(tenant_id);
-        const snapshots: Prisma.Sql[] = [];
-        const daily: Prisma.Sql[] = [];
-        const todayBR = new Intl.DateTimeFormat("en-CA", {
-            timeZone: "America/Sao_Paulo",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        }).format(new Date());
+        const snapshots: any[][] = [];
+        const daily: product_daily_salesCreateManyInput[] = [];
+        const todayBR = formatter.format(new Date());
         
         for (const row of productData) {
             const key = normalizeProduct(row.productName);
@@ -54,27 +55,33 @@ export default class SnapshotService {
                 console.warn("Unknow product:", row.productName);
                 continue; // skip iteration
             };
-            snapshots.push(this.#prismaStatic.sql`(
-                ${tenant_id}::uuid,
-                ${product_id}::uuid,
-                ${import_id}::uuid,
-                ${todayBR},
-                ${row.totalSoldQty},
-                ${row.totalRevenue},
-                ${row.totalCost},
-                ${row.totalProfit}
-            )`);
-            daily.push(this.#prismaStatic.sql`(
-                ${crypto.randomUUID()}::uuid,
-                ${tenant_id}::uuid,
-                ${product_id}::uuid,
-                ${import_id}::uuid,
-                ${todayBR},
-                ${row.totalSoldQty},
-                ${row.totalRevenue},
-                ${row.totalCost},
-                ${row.totalProfit}
-            )`);
+            
+            snapshots.push([
+                tenant_id,
+                product_id,
+                import_id,
+                todayBR,
+                row.unitCost,
+                row.unitProfitMargin,
+                row.totalSoldQty,
+                row.totalRevenue,
+                row.totalCost,
+                row.totalProfit
+            ]);
+            
+            daily.push({
+                id: crypto.randomUUID(),
+                tenant_id,
+                product_id,
+                import_id,
+                date: todayBR,
+                unit_cost: row.unitCost,
+                unit_profit_margin: row.unitProfitMargin,
+                cumulative_qty: row.totalSoldQty,
+                cumulative_revenue: row.totalRevenue,
+                cumulative_cost: row.totalCost,
+                cumulative_profit: row.totalProfit
+            });
         };
         
         // ATOMICITY
@@ -86,15 +93,30 @@ export default class SnapshotService {
                     product_id,
                     import_id,
                     last_date,
+                    last_unit_cost,
+                    last_unit_profit_margin,
                     last_cumulative_qty,
                     last_cumulative_revenue,
                     last_cumulative_cost,
                     last_cumulative_profit
                 )
-                VALUES ${this.#prismaStatic.join(snapshots)}
+                VALUES ${this.#prismaStatic.join(snapshots.map(row => this.#prismaStatic.sql`(
+                    ${row[0]}::uuid,
+                    ${row[1]}::uuid,
+                    ${row[2]}::uuid,
+                    ${row[3]},
+                    ${row[4]},
+                    ${row[5]},
+                    ${row[6]},
+                    ${row[7]},
+                    ${row[8]},
+                    ${row[9]}
+                )`))}
                 ON CONFLICT (tenant_id, product_id)
                 DO UPDATE SET
                     last_date = EXCLUDED.last_date,
+                    last_unit_cost = EXCLUDED.last_unit_cost,
+                    last_unit_profit_margin = EXCLUDED.last_unit_profit_margin,
                     last_cumulative_qty = EXCLUDED.last_cumulative_qty,
                     last_cumulative_revenue = EXCLUDED.last_cumulative_revenue,
                     last_cumulative_cost = EXCLUDED.last_cumulative_cost,
@@ -103,20 +125,7 @@ export default class SnapshotService {
             `;
 
             // DAILY SALES
-            await tx.$executeRaw`
-                INSERT INTO product_daily_sales (
-                    id,
-                    tenant_id,
-                    product_id,
-                    import_id,
-                    date,
-                    cumulative_qty,
-                    cumulative_revenue,
-                    cumulative_cost,
-                    cumulative_profit
-                )
-                VALUES ${this.#prismaStatic.join(daily)}
-            `;
+            await tx.product_daily_sales.createMany({ data: daily });
         });
     };
 };

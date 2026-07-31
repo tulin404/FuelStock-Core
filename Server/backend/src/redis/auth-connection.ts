@@ -11,16 +11,3 @@ const redisOptions: RedisOptions = {
 };
 
 export const authConnection = new Redis(redisURL, redisOptions);
-
-
-
-// CONNECTION TESTING
-
-// connection.on('error', (err) => {
-//   console.error('[ioredis] Error connecting to Redis:', err.message);
-// });
-
-
-// connection.ping()
-//   .then((res) => console.log("Conexão Redis:", res))
-//   .catch((err) => console.error("Erro ao conectar no Redis:", err));

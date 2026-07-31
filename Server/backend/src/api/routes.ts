@@ -1,11 +1,22 @@
 import { Router } from "express";
+import { authRouter } from "./routes/auth.routes.js";
+import { stocksRouter } from "./routes/stock.routes.js";
 import { importController } from "./controllers/import.controller.js";
-import { refillController } from "./controllers/refill.controller.js";
 import { upload } from "./middlewares/upload.js";
-import { authMiddleware } from "./middlewares/auth.middleware.js";
+import { importMiddleware } from "./middlewares/import.middleware.js";
+import { apiRateLimit, importRateLimit } from "./middlewares/rate-limitter.middleware.js";
+import { usersRouter } from "./routes/users.route.js";
+import { analyticsRouter } from "./routes/analytics.routes.js";
+import { AIRouter } from "./routes/ai.routes.js";
 
 export const globalRouter: Router = Router();
 
-globalRouter.post("/import", upload.single("file"), importController);
+globalRouter.use(apiRateLimit);
 
-globalRouter.post("/stock/refill", upload.single("file"), refillController);
+globalRouter.use("/auth", authRouter);
+globalRouter.use("/users", usersRouter);
+globalRouter.use("/stocks", stocksRouter);
+globalRouter.use("/analytics", analyticsRouter);
+globalRouter.use("/ai", AIRouter);
+
+globalRouter.post("/import", [importRateLimit, upload.single("file"), importMiddleware], importController);

@@ -1,0 +1,94 @@
+services:
+  frontend:
+    image: ghcr.io/tulin404/fuelstock-frontend:latest
+    container_name: fuelstock-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
+    restart: unless-stopped
+
+  x-backend-base: &backend-base
+    image: ghcr.io/tulin404/fuelstock-backend:latest
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis-auth
+      - redis-queue
+    volumes:
+      - uploads:/app/uploads
+    restart: unless-stopped
+
+  backend:
+      <<: *backend-base
+      container_name: fuelstock-backend
+
+  worker-import:
+      <<: *backend-base
+      container_name: fuelstock-worker-import
+      command: node dist/src/workers/import.worker.js
+
+  worker-product:
+      <<: *backend-base
+      container_name: fuelstock-worker-product
+      command: node dist/src/workers/product.worker.js
+
+  worker-snapshot:
+      <<: *backend-base
+      container_name: fuelstock-worker-snapshot
+      command: node dist/src/workers/snapshot.worker.js
+
+  worker-stock:
+      <<: *backend-base
+      container_name: fuelstock-worker-stock
+      command: node dist/src/workers/stock.worker.js
+
+  worker-analytics:
+      <<: *backend-base
+      container_name: fuelstock-worker-analytics
+      command: node dist/src/workers/analytics.worker.js
+
+  worker-monthly:
+      <<: *backend-base
+      container_name: fuelstock-worker-monthly
+      command: node dist/src/workers/monthly.worker.js
+
+
+  db:
+      image: postgres:17
+      container_name: fuelstock-db
+      environment:
+          POSTGRES_DB: fuelstock
+          POSTGRES_USER: fuelstock
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      volumes:
+        - postgres-data:/var/lib/postgresql/data
+      restart: unless-stopped
+
+  redis-auth:
+      image: redis:7
+      container_name: redis-auth
+      command: redis-server --requirepass ${REDIS_PASSWORD}
+      restart: unless-stopped
+
+  redis-queue:
+      image: redis:7
+      container_name: redis-queue
+      command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+      volumes:
+        - redis-queue-data:/data
+      restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-queue-data:
+  uploads:
+
+networks:
+  default:
+    name: fuelstock-network

@@ -1,0 +1,48 @@
+name: Docker Build
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+
+permissions:
+  contents: read
+  packages: write
+
+
+jobs:
+  docker:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./Server/backend
+          push: true
+          tags: |
+            ghcr.io/tulin404/fuelstock-backend:latest
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./Server/frontend
+          push: true
+          tags: |
+            ghcr.io/tulin404/fuelstock-frontend:latest
