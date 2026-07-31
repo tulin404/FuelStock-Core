@@ -71,6 +71,13 @@ Além do gerenciamento de estoque, o sistema fornece métricas estratégicas sob
   <img src="./docs/AIAnalysis.png" width=900>  
 </p>
 
+### Geral
+
+<p align="center">
+  <img src="./docs/FullTop.png" width=49%>  
+  <img src="./docs/FullBottom.png" width=49%>  
+</p>
+
 ---
 
 ## ✨ Principais Recursos
