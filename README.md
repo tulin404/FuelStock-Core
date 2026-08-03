@@ -166,6 +166,10 @@ Alguns componentes proprietários e serviços internos não fazem parte deste re
 - Nginx
 - GitHub Actions
 
+### Infraestrutura
+- Hostinger VPS
+- Ubuntu Server
+
 ---
 
 ## 🚀 Executando o Projeto
