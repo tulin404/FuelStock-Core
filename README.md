@@ -43,7 +43,7 @@
 
 O **FuelStock** é um SaaS B2B desenvolvido para transformar o gerenciamento de estoque em lojas de conveniência de postos de combustível.
 
-Enquanto muitos sistemas legados utilizados pelo setor concentram-se apenas na operação das bombas e oferecem pouca ou nenhuma integração com o estoque da loja, o FuelStock centraliza todas essas informações em uma única plataforma moderna, permitindo que gestores acompanhem a operação em tempo real.
+Enquanto muitos sistemas legados utilizados pelo setor concentram-se na operação das bombas de combustível e oferecem pouca ou nenhuma integração com o estoque da loja de conveniência, o FuelStock foi desenvolvido para integrar-se diretamente a esses sistemas, como o Fueltech, utilizando os dados já existentes para centralizar exclusivamente as informações relacionadas ao estoque da loja. Dessa forma, os gestores podem acompanhar a movimentação dos produtos em tempo real e tomar decisões com base em dados atualizados.
 
 Além do gerenciamento de estoque, o sistema fornece métricas estratégicas sobre vendas, compras, lucratividade e desempenho operacional. Com integração de Inteligência Artificial, a plataforma auxilia na tomada de decisões, identificação de oportunidades e prevenção de perdas, reduzindo desperdícios e aumentando a eficiência operacional.
 
